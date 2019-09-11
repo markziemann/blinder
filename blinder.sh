@@ -94,9 +94,9 @@ REPORT=$WD.rep
 
 cat <<EOT | fold -s -w120 | sed 's/$/<br>/' >> $REPORT
 
-Thanks for using Blinder. We provide this free tool to the XXX community \
-to help XXX. Please understand that this tool is a work in progress and \
-that bugs may be present. \
+Thanks for using Blinder. We provide this free tool to the academic community \
+to help assessment fairness. Please understand that this tool is a work in \
+progress and that bugs may be present. \
 Feedback via twitter: "@mdziemann".
 Report bugs via GitHub: "https://github.com/markziemann/blinder/issues"
 

@@ -1,0 +1,53 @@
+<html>
+<head>
+<style>
+body { margin:0; padding:0; background:#CCC; font-family:Arial;}
+
+.fileuploadholder {
+	width:400px;
+	height:auto;
+	margin: 20px auto 0px auto;
+	background-color:#FFF;
+	border:1px solid #CCC;
+	padding:6px;
+}
+  div.section_header {
+    padding: 3px 6px 3px 6px;
+
+    background-color: #8E9CB2;
+
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 200%;
+    text-align: center;
+  }
+
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> Blinder</title>
+</head>
+
+<body>
+
+<div class="section_header section_header_red">
+BLINDER
+</div>
+
+<div class="fileuploadholder">
+	<form enctype="multipart/form-data" action="gnes.php" method="post">
+	Blinder is a tool that is designed to perform blinding of student assignment
+        documents. Upload a zip-compressed folder of files in doc/docx/pdf formats and
+        blinder will remove the coverpage and rename the files in a code that anonymises 
+        the submissions. 
+	<br><br>
+	Select zip-file to upload: <br>
+	<input name="file" type="file" id="file" size="80" <br><br><br>
+	[Optional] Email address<br>
+        <input type="text" name="email" id="email" size="40" <br><br><br>
+        <input type="submit" id="u_button" value="Upload & scan"> <br><br>
+	<a href="https://www.deakin.edu.au/about-deakin/people/mark-ziemann"> Contact the author.</a>
+	</form>
+</div>
+</body>
+</html>
+

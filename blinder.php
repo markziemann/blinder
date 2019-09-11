@@ -40,11 +40,11 @@ if ($_FILES["file"]["size"] > 50000000) {
 }
 
 // Allow certain file formats
-$allowed = array('xls','xlsx', 'XLS', 'XLSX');
+$allowed = array('zip','ZIP');
 $name = $_FILES["file"]["name"];
 $ext = end((explode(".", $name)));
 if( ! in_array($ext,$allowed) ) {
-    echo "Sorry, only xls & xlsx files are allowed. <br>";
+    echo "Sorry, only zip files are allowed. <br>";
     $uploadFail = 1;
 }
 
@@ -80,7 +80,7 @@ if ($uploadFail == 1) {
 
         $old_path = getcwd();
         chdir('/var/www/code');
-        $output = shell_exec("./scan_uploaded_files.sh $file_path $mail_result");
+        $output = shell_exec("./blinder.sh $file_path $mail_result");
         $report_path .= $file_path . "rep" ;
 #        print_r($report_path);
 	chdir($old_path);
@@ -90,7 +90,7 @@ if ($uploadFail == 1) {
         $mail_result .= "No email address provided";
         $old_path = getcwd();
         chdir('/var/www/code');
-        $output = shell_exec("./scan_uploaded_files.sh $file_path");
+        $output = shell_exec("./blinder.sh $file_path");
         $report_path .= $file_path . "rep" ;
 #        print_r($report_path);
         chdir($old_path);
@@ -131,28 +131,4 @@ body { margin:0; padding:0; background:#CCC; font-family:Arial; }
   }
 
 </style>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title> Gene Name Error Scanner</title>
-</head>
-
-<body>
-
-<div class="section_header section_header_red">
-<a href="gnes.html"> Gene Name Error Scanner </a>
-</div>
-
-<div class="fileuploadholder">
-	<form enctype="multipart/form-data" action="gnes.php" method="post">
-	Excel autocorrect errors are common in supplementary files of genomics papers*. Upload your files here and it will be scanned for such errors. Optionally, enter your email address and receive a report in PDF format.
-	<br><br>
-	Select file to upload: <br>
-	<input name="file" type="file" id="file" size="80" <br><br><br>
-	[Optional] Email address<br>
-        <input type="text" name="email" id="email" size="40" value="<?php echo $email ;?>" >  <br><br>
-        <input type="submit" id="u_button" value="Upload & scan"> <br><br>
-	*<a href="http://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-1044-7"> Ziemann M, Eren Y, El-Osta A. Genome Biol. 2016 Aug 23;17(1):177.</a>
-	</form>
-</div>
-</body>
-</html>
 

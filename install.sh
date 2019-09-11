@@ -19,17 +19,20 @@ sudo apt-get install num-utils
 sudo apt-get install enscript
 sudo apt-get install ghostscript
 sudo apt-get install mailutils
+sudo apt-get install detox unoconv poppler-utils pdftk
+#pdftk with this script https://askubuntu.com/a/1046476
 
 ##########################################################
 echo "installing html, php & sh script"
 ##########################################################
-#put html
-sudo cp gnes.html gnes.php /var/www/html
-#put php
-sudo chmod +x /var/www/html/gnes.php
+#put html and php
+sudo cp blinder.html blinder.php /var/www/html
+#chmod php
+sudo chmod +x /var/www/html/blinder.php
 #put sh script
-sudo cp -r code /var/www/
-sudo chmod +x /var/www/code/scan_uploaded_files.sh
+sudo mkdir code /var/www/code
+sudo cp blinder.sh /var/www/code
+sudo chmod +x /var/www/code/blinder.sh
 sudo ln -s /var/www/code /var/www/html/
 
 #setup upload directory
@@ -48,11 +51,3 @@ And change it to accommodate files up to 100MB a follows:
 upload_max_filesize = 100M
 "
 
-##########################################################
-echo "installing cleanup old pdf files script in crontab"
-##########################################################
-echo 'rm `find /var/www/code/*pdf -type f -mmin +60`' > /var/www/code/cleanup_pdf.sh
-chmod +x /var/www/code/cleanup_pdf.sh
-crontab -l > /tmp/my-crontab
-echo '30 2 * * * bash /var/www/code/cleanup_pdf.sh' >> /tmp/my-crontab
-sudo crontab /tmp/my-crontab

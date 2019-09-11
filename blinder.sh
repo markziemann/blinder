@@ -55,16 +55,17 @@ done
 
 # save checksums
 cd blind
+echo "OrigFileName OrigCheckSum BlindedCheckSum" | tr ' ' '\t' > checksums.tsv
 for PDF in *pdf ; do
   ORIG_MD5=$(md5sum ../$PDF| cut -d ' ' -f1 )
   TRIM_MD5=$(md5sum $PDF| cut -d ' ' -f1)
   echo $PDF $ORIG_MD5 $TRIM_MD5
-done > checksums.md5
+done | tr ' ' '\t' >> checksums.tsv
 
 
 # find shortest prefix length
 N=2
-while [ $(cut -d ' ' -f2- checksums.md5 | tr ' ' '\n' | cut -c-${N} | sort | uniq -d | wc -l) -gt 0 ] ; do
+while [ $(cut -d ' ' -f2- checksums.tsv | sed 1d | tr ' ' '\n' | cut -c-${N} | sort | uniq -d | wc -l) -gt 0 ] ; do
   let N=N+1
 done
 
@@ -75,8 +76,10 @@ for PDF in *pdf ; do
   mv $PDF $PFX.pdf
 done
 
-echo OriginalFileName OrigCheckSum BlindedCheckSum BlindFilename Grade | tr ' ' '\t' > marking_table.tsv
-paste <(sort -k 2b,2 checksums.md5) <(ls *pdf) | tr ' ' '\t' >> marking_table.tsv
+echo OrigCheckSum BlindedCheckSum BlindFilename Grade | tr ' ' '\t' > marking_table.tsv
+paste <(sed 1d checksums.tsv | sort -k 2b,2 ) <(ls *pdf) | tr ' ' '\t' | cut -f2- >> marking_table.tsv
+
+wget "https://raw.githubusercontent.com/markziemann/blinder/master/doc/readme.txt"
 
 cd ..
 

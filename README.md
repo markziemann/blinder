@@ -10,8 +10,9 @@ After uploading your zip file, you will get a download link to a zip file of bli
 - marking_table.tsv
 
 The pdf files are the assigment documents after having the 1st page removed and
-file name changed to a short code. If students haven't included a coverpage, then
-you might find the first page of the document is missing. This tool does not 
+file name changed to a short code. Any doc or docx files have been converted to pdf.
+If students haven't included a coverpage, then you might find the first page of the
+document is missing. This tool does not 
 remove any identifying information elsewhere in the assignment so students will
 need to be instructed not to add identifiable information to pages 2 and onwards,
 as well as to begin the assignment on page 2.

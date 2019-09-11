@@ -33,7 +33,7 @@ ls | egrep '(doc$|docx)' > doclist
 
 # now to conert the doc/docx files and to pdfs
 DOCCNT=$(wc -l < doclist)
-if [ $DOCLIST -ge 1 ] ; then
+if [ $DOCCNT -ge 1 ] ; then
   for DOC in *doc *docx ; do
     unoconv "$DOC" "$DOC.pdf"
   done

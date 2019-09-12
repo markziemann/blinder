@@ -25,56 +25,83 @@ cp "$ZIP" $WD
 cd $WD
 unzip "$ZIP" >/dev/null 2>&1
 
-# fix the filenames
-detox *pdf *doc *docx
+# fix the crazy filenames
+detox -r *
+
+# bring all documents to pwd
+mv $(find . | egrep -i '(doc$|docx$|pdf$)') .
+MYCNT=$(find . | egrep -ic '(doc$|docx$|pdf$)')
+echo "Found $MYCNT documents including pdf and doc/docx files. <br>"
+
+# all lower case for simplicity
+rename -f 'y/A-Z/a-z/' *
 
 # now deal with the word documents
-ls | egrep '(doc$|docx)' > doclist
+find . | egrep '(doc$|docx$)' > doclist
 
 # now to conert the doc/docx files and to pdfs
 DOCCNT=$(wc -l < doclist)
 if [ $DOCCNT -ge 1 ] ; then
-  for DOC in *doc *docx ; do
-    unoconv "$DOC" "$DOC.pdf"
-  done
+  echo "Converting $DOCCNT word docs to PDFs. <br>"
+  ls *doc *docx | parallel unoconv {} {}.pdf
 fi
 
+#DOCCNT=$(find . | egrep -c '(doc$|docx$)' )
+#echo "$DOCCNT doc/docx files didn't convert properly"<br>
+
 # classify front pages based on number of words
-for PDF in *pdf ; do
-  pdftotext -f 1 -l 1 $PDF - | wc -w \
-  | sed "s/$/\t${PDF}/"
-done | sort -n | awk '$1>100 {print $2}' > nocovpg.txt
+CVRPG(){
+pdftotext -f 1 -l 1 $1 - | wc -w  | sed "s/$/\t${PDF}/"
+}
+export -f CVRPG
+ls *pdf | parallel CVRPG | sort -n | awk '$1>100 {print $2}' > nocovpg.txt
 
 
 # now remove the front page
+MYCNT=$(find . | egrep -ic '(pdf$)')
+echo "Removing coverpage from $MYCNT pdf documents. <br>"
 mkdir blind
-for PDF in *pdf ; do
-  pdftk $PDF cat 2-end output blind/$PDF
-done
+ls *pdf | parallel pdftk {} cat 2-end output blind/{}
 
 
 # save checksums
 cd blind
 echo "OrigFileName OrigCheckSum BlindedCheckSum" | tr ' ' '\t' > checksums.tsv
-for PDF in *pdf ; do
-  ORIG_MD5=$(md5sum ../$PDF| cut -d ' ' -f1 )
-  TRIM_MD5=$(md5sum $PDF| cut -d ' ' -f1)
-  echo $PDF $ORIG_MD5 $TRIM_MD5
-done | tr ' ' '\t' >> checksums.tsv
+CHCKSUMS(){
+PDF=$1
+ORIG_MD5=$(md5sum ../$PDF| cut -d ' ' -f1 )
+TRIM_MD5=$(md5sum $PDF| cut -d ' ' -f1)
+echo $PDF $ORIG_MD5 $TRIM_MD5
+}
+export -f CHCKSUMS
+ls *pdf | parallel CHCKSUMS {} | tr ' ' '\t' >> checksums.tsv
+
 
 
 # find shortest prefix length
 N=2
-while [ $(cut -d ' ' -f2- checksums.tsv | sed 1d | tr ' ' '\n' | cut -c-${N} | sort | uniq -d | wc -l) -gt 0 ] ; do
+while [ $(cut -f2 checksums.tsv | sed 1d | tr ' ' '\n' | cut -c-${N} | sort | uniq -d | wc -l) -gt 0 ] ; do
   let N=N+1
 done
 
 PFXLEN=$N
 
-for PDF in *pdf ; do
-  PFX=$(md5sum ../$PDF | cut -d ' ' -f1 | cut -c-${PFXLEN})
-  mv $PDF $PFX.pdf
-done
+echo "Renaming PDFs. <br><br>"
+
+#for PDF in *pdf ; do
+#  PFX=$(md5sum ../$PDF | cut -d ' ' -f1 | cut -c-${PFXLEN})
+#  mv $PDF $PFX.pdf
+#done
+
+RENAME(){
+PDF=$1
+PFXLEN=$2
+PFX=$(md5sum ../$PDF | cut -d ' ' -f1 | cut -c-${PFXLEN})
+mv $PDF $PFX.pdf
+}
+export -f RENAME
+parallel RENAME ::: *pdf ::: $PFXLEN
+
 
 echo OrigCheckSum BlindedCheckSum BlindFilename Grade | tr ' ' '\t' > marking_table.tsv
 paste <(sed 1d checksums.tsv | sort -k 2b,2 ) <(ls *pdf) | tr ' ' '\t' | cut -f2- >> marking_table.tsv
@@ -93,7 +120,6 @@ REPORT=$WD.rep
 
 
 cat <<EOT | fold -s -w120 | sed 's/$/<br>/' >> $REPORT
-
 Thanks for using Blinder. We provide this free tool to the academic community \
 to help assessment fairness. Please understand that this tool is a work in \
 progress and that bugs may be present. \
@@ -105,7 +131,6 @@ data and underlying software, the author and author's employer do not and cannot
 performance or results that may be obtained by using this software or data. We disclaim all warranties, \
 express or implied, including warranties of performance, merchantability or fitness for any particular \
 purpose.
-
 EOT
 
 #dump to screen
@@ -116,6 +141,7 @@ cat $REPORT
 #ps2pdfwr $REPORT.ps $FILE.pdf
 
 # remove old working directories
+find /tmp/ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
 
 
 cat <<EOT
@@ -131,10 +157,8 @@ function goBack() {
 </script>
 EOT
 
-
-
 }
 export -f blinder
 
-blinder $1
+blinder "$1"
 

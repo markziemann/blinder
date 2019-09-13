@@ -43,12 +43,23 @@ find . | egrep '(doc$|docx$)' > doclist
 DOCCNT=$(wc -l < doclist)
 if [ $DOCCNT -ge 1 ] ; then
   echo "Converting $DOCCNT word docs to PDFs. <br>"
-  ls *doc *docx | parallel unoconv {} {}.pdf
+  for DOC in $(ls | egrep '(doc$|docx$)' ) ; do
+    export HOME=/tmp && soffice --headless --convert-to pdf "$DOC" >/dev/null 2>&1 && rm $DOC
+###    export HOME=/tmp && unoconv --format pdf "$DOC" >/dev/null 2>&1 && rm $DOC
+  done
+
+### For any reason
+#  DOC2PDF(){
+#  DOC=$1
+#  export HOME=/tmp && soffice --headless --convert-to pdf "$DOC" >/dev/null 2>&1 && rm $DOC
+#  }
+#  export -f DOC2PDF
+#  parallel DOC2PDF ::: $(ls | egrep '(doc$|docx$)')
+
+
+  DOCCNT=$(find . | egrep -c '(doc$|docx$)' )
+  echo "Doc2pdf conversion failed for $DOCCNT files<br>"
 fi
-
-#DOCCNT=$(find . | egrep -c '(doc$|docx$)' )
-#echo "$DOCCNT doc/docx files didn't convert properly"<br>
-
 # classify front pages based on number of words
 CVRPG(){
 pdftotext -f 1 -l 1 $1 - | wc -w  | sed "s/$/\t${PDF}/"
@@ -56,13 +67,11 @@ pdftotext -f 1 -l 1 $1 - | wc -w  | sed "s/$/\t${PDF}/"
 export -f CVRPG
 ls *pdf | parallel CVRPG | sort -n | awk '$1>100 {print $2}' > nocovpg.txt
 
-
 # now remove the front page
 MYCNT=$(find . | egrep -ic '(pdf$)')
 echo "Removing coverpage from $MYCNT pdf documents. <br>"
 mkdir blind
 ls *pdf | parallel pdftk {} cat 2-end output blind/{}
-
 
 # save checksums
 cd blind
@@ -87,11 +96,6 @@ done
 PFXLEN=$N
 
 echo "Renaming PDFs. <br><br>"
-
-#for PDF in *pdf ; do
-#  PFX=$(md5sum ../$PDF | cut -d ' ' -f1 | cut -c-${PFXLEN})
-#  mv $PDF $PFX.pdf
-#done
 
 RENAME(){
 PDF=$1

@@ -24,7 +24,6 @@ $output = "";
 $report_path = "";
 
 $filename = $_FILES["file"]["name"];
-$mime = mime_content_type ( $filename );
 $type =$_FILES["file"]["type"];
 $email = $_POST["email"];
 

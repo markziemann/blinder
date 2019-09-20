@@ -79,7 +79,7 @@ if ($uploadFail == 1) {
 
         $old_path = getcwd();
         chdir('/var/www/code');
-        $output = shell_exec("./blinder.sh $file_path $mail_result");
+        $output = shell_exec("./unblinder.sh $file_path $mail_result");
         $report_path .= $file_path . "rep" ;
 #        print_r($report_path);
 	chdir($old_path);
@@ -89,7 +89,7 @@ if ($uploadFail == 1) {
         $mail_result .= "No email address provided";
         $old_path = getcwd();
         chdir('/var/www/code');
-        $output = shell_exec("./blinder.sh $file_path");
+        $output = shell_exec("./unblinder.sh $file_path");
         $report_path .= $file_path . "rep" ;
 #        print_r($report_path);
         chdir($old_path);

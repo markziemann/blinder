@@ -73,6 +73,7 @@ echo "Removing coverpage from $MYCNT pdf documents. <br>"
 mkdir blind
 ls *pdf | parallel pdftk {} cat 2-end output blind/{}
 
+
 # save checksums
 cd blind
 echo "OrigFileName OrigCheckSum BlindedCheckSum" | tr ' ' '\t' > checksums.tsv

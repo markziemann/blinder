@@ -1,0 +1,71 @@
+<html>
+<head>
+<style>
+body { margin:0; padding:0; background:#CCC; font-family:Arial;}
+
+.fileuploadholder {
+	width:400px;
+	height:auto;
+	margin: 20px auto 0px auto;
+	background-color:#FFF;
+	border:1px solid #CCC;
+	padding:6px;
+}
+  div.section_header {
+    padding: 3px 6px 3px 6px;
+
+    background-color: #8E9CB2;
+
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 200%;
+    text-align: center;
+  }
+
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> Unblinder</title>
+</head>
+
+<body>
+
+<div class="section_header section_header_red">
+UNBLINDER
+</div>
+
+<div class="fileuploadholder">
+	<form enctype="multipart/form-data" action="unblinder.php" method="post">
+        <p><b>Alpha testing - currently only for experimentation</b></p>
+
+	<p>Unblinder is a tool to re-identify assignments after marking.</p>
+        
+        <p>For this to work, upload a zip file containing student assignments along
+        with the marking_table.tsv and checksums.md5 files and Unblinder will rename
+        the files to their original name.</p>
+
+	Select zip-file to upload (100MB max): <br>
+
+	<input name="file" type="file" id="file" size="80" <br><br><br>
+
+        [Optional] Email address<br>
+
+        <input type="text" name="email" id="email" size="40" <br><br><br>
+
+        <input type="submit" id="u_button" value="Upload"> <br><br>
+
+        <a href="http://www.blinder.cc">Return to Blinder</a><br>
+
+	<a href="https://github.com/markziemann/blinder/blob/master/blinded.zip?raw=true">
+        Download an example zip file</a><br>
+
+        <a href="https://github.com/markziemann/blinder">View the code</a><br>
+
+        <a href="https://www.deakin.edu.au/about-deakin/people/mark-ziemann">Contact the author</a>
+
+	</form>
+</div>
+
+</body>
+
+</html>
+

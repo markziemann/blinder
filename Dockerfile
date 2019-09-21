@@ -35,7 +35,6 @@ RUN cp blinder/blinder.html blinder/unblinder.html /var/www/html/ && \
   mkdir /var/www/html/code && \
   cp blinder/blinder.sh blinder/unblinder.sh /var/www/html/code/ && \
   cd /var/www/html/ && \
-  ln -s /tmp . && \
   rm index.html && \
   ln blinder.html index.html \
   chmod +x blinder.php unblinder.php code/blinder.sh code/unblinder.sh

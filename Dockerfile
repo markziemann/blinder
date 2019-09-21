@@ -1,18 +1,47 @@
-FROM ubuntu
-ARG DEBIAN_FRONTEND=noninteractive
+# Base image
+FROM ubuntu:16.04
 
-RUN apt update && \
-apt install -y tzdata && \
-apt install -y php apache2 gnumeric num-utils num-utils ghostscript\
- detox unoconv poppler-utils nano wget git && \
-wget https://gist.githubusercontent.com/markziemann/c48f74eee3f381308e1482852242a493/raw/4f5767d92e9d8fbd89981e47aa940ea7f2526324/pdftk_installer.sh &&\
-bash pdftk_installer.sh && \
-git clone https://github.com/markziemann/blinder.git && \
-cd blinder && \
-cp blinder.php /var/www/html && \
-cp blinder.html /var/www/html/index.html && \
-mkdir /var/www/html/code && \
-cp blinder.sh /var/www/html/code
-ENV DEBIAN_FRONTEND="noninteractive"
+ENV DIRPATH /root
+WORKDIR $DIRPATH
+
+RUN rm /bin/sh && \
+  ln /bin/bash /bin/sh
+
+RUN \
+  apt-get clean all && \
+  apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install -y \
+     apache2 \
+     libapache2-mod-php \
+     php \
+     libreoffice \
+     nano \
+     git \
+     wget \
+     num-utils \
+     detox \
+     pdftk \
+     parallel \
+     poppler-utils \
+     zip \
+     unzip
+
+
+RUN git clone https://github.com/markziemann/blinder.git
+
+RUN cp blinder/blinder.html blinder/unblinder.html /var/www/html/ && \
+  cp blinder/blinder.php blinder/unblinder.php /var/www/html/ && \
+  mkdir /var/www/html/code && \
+  cp blinder/blinder.sh blinder/unblinder.sh /var/www/html/code/ && \
+  cd /var/www/html/ && \
+  ln -s /tmp . && \
+  rm index.html && \
+  ln blinder.html index.html \
+  chmod +x blinder.php unblinder.php code/blinder.sh code/unblinder.sh
+
 EXPOSE 80
+EXPOSE 3306
+
 CMD apachectl -D FOREGROUND
+

@@ -27,16 +27,19 @@ RUN \
      zip \
      unzip
 
+RUN ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
 
 RUN git clone https://github.com/markziemann/blinder.git
 
 RUN cp blinder/blinder.html blinder/unblinder.html /var/www/html/ && \
   cp blinder/blinder.php blinder/unblinder.php /var/www/html/ && \
   mkdir /var/www/html/code && \
-  cp blinder/blinder.sh blinder/unblinder.sh /var/www/html/code/ && \
+  mkdir /var/www/upload/ && \
+  cp blinder/blinder.sh /var/www/html/code/ && \
+  cp blinder/unblinder.sh /var/www/html/code/ && \
   cd /var/www/html/ && \
   rm index.html && \
-  ln blinder.html index.html \
+  ln blinder.html index.html && \
   chmod +x blinder.php unblinder.php code/blinder.sh code/unblinder.sh
 
 EXPOSE 80

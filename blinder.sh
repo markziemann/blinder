@@ -17,9 +17,11 @@ set -x
 
 blinder(){
 ZIP="$1"
-
 # create temporary directory
-WD=blinder_$RANDOM$RANDOM$RANDOM
+MYCODE=$RANDOM$RANDOM$RANDOM
+WD=/var/www/html/blinder_$MYCODE
+WD2=blinder_$MYCODE
+
 mkdir "$WD"
 cp "$ZIP" $WD
 cd $WD
@@ -150,7 +152,7 @@ find ~ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \
 
 
 cat <<EOT
-<form action="/code/$WD/blinded.zip">
+<form action="$WD2/blinded.zip">
     <input type="submit" value="Download zip file" />
 </form>
 <button onclick="goBack()">Go Back</button>
@@ -166,4 +168,9 @@ EOT
 export -f blinder
 
 blinder "$1"
+
+
+
+
+
 

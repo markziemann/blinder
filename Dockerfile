@@ -52,9 +52,8 @@ RUN cp blinder/blinder.html blinder/unblinder.html /var/www/html/ && \
   sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 100M/' /etc/php/7.0/apache2/php.ini && \
   sed -i 's/post_max_size = 8M/post_max_size = 100M/' /etc/php/7.0/apache2/php.ini && \
   sed -i 's/max_execution_time = 30/max_execution_time = 600/' /etc/php/7.0/apache2/php.ini && \
-  cd /var/www/html/code && \
-  ln -s /tmp .
-
+  chown www-data /mnt
+  chown -R www-data /var/www/html
 
 EXPOSE 80
 EXPOSE 3306

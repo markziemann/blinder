@@ -19,7 +19,7 @@ blinder(){
 ZIP="$1"
 
 # create temporary directory
-WD=/tmp/blinder_$RANDOM$RANDOM$RANDOM
+WD=blinder_$RANDOM$RANDOM$RANDOM
 mkdir "$WD"
 cp "$ZIP" $WD
 cd $WD
@@ -146,7 +146,7 @@ cat $REPORT
 #ps2pdfwr $REPORT.ps $FILE.pdf
 
 # remove old working directories
-find /tmp/ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
+find ~ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
 
 
 cat <<EOT

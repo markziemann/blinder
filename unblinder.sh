@@ -19,7 +19,10 @@ blinder(){
 ZIP="$1"
 
 # create temporary directory
-WD=/tmp/blinder_$RANDOM$RANDOM$RANDOM
+MYCODE=$RANDOM$RANDOM$RANDOM
+WD=/var/www/html/blinder_$MYCODE
+WD2=blinder_$MYCODE
+
 mkdir "$WD"
 cp "$ZIP" $WD
 cd $WD
@@ -70,11 +73,11 @@ cat $REPORT
 #ps2pdfwr $REPORT.ps $FILE.pdf
 
 # remove old working directories
-find /tmp/ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
+find ~ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
 
 
 cat <<EOT
-<form action="/code/$WD/unblinded.zip">
+<form action="$WD2/unblinded.zip">
     <input type="submit" value="Download zip file" />
 </form>
 <button onclick="goBack()">Go Back</button>

@@ -31,6 +31,8 @@ RUN echo
 
 RUN echo
 
+RUN echo
+
 RUN git clone https://github.com/markziemann/blinder.git
 
 RUN cp blinder/blinder.html blinder/unblinder.html /var/www/html/ && \
@@ -52,7 +54,7 @@ RUN cp blinder/blinder.html blinder/unblinder.html /var/www/html/ && \
   sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 100M/' /etc/php/7.0/apache2/php.ini && \
   sed -i 's/post_max_size = 8M/post_max_size = 100M/' /etc/php/7.0/apache2/php.ini && \
   sed -i 's/max_execution_time = 30/max_execution_time = 600/' /etc/php/7.0/apache2/php.ini && \
-  chown www-data /mnt
+  chown www-data /mnt && \
   chown -R www-data /var/www/html
 
 EXPOSE 80

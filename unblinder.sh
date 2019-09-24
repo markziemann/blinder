@@ -20,8 +20,8 @@ ZIP="$1"
 
 # create temporary directory
 MYCODE=$RANDOM$RANDOM$RANDOM
-WD=/var/www/html/blinder_$MYCODE
-WD2=blinder_$MYCODE
+WD=/var/www/html/unblinder_$MYCODE
+WD2=unblinder_$MYCODE
 
 mkdir "$WD"
 cp "$ZIP" $WD
@@ -34,12 +34,12 @@ MYCNT=$(find . | egrep -ic '(pdf$)')
 echo "Found $MYCNT pdf files. <br><br> "
 
 mkdir unblinded
-while read line ; do
+sed 1d marking_table.tsv | while read line ; do
     FILE=$(echo $line | cut -d ' ' -f3)
     CHECKSUM=$(grep -w $FILE marking_table.tsv | cut -f1 )
     NAME=$(grep -w $CHECKSUM checksums.tsv | cut -f1)
     mv $FILE unblinded/$NAME
-done <<<$(sed 1d marking_table.tsv )
+done
 mv marking_table.tsv checksums.tsv unblinded
 
 zip -r unblinded.zip unblinded >/dev/null 2>&1
@@ -73,7 +73,7 @@ cat $REPORT
 #ps2pdfwr $REPORT.ps $FILE.pdf
 
 # remove old working directories
-find ~ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
+find /var/www/html -name '*blinder_*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
 
 
 cat <<EOT
@@ -93,4 +93,5 @@ EOT
 export -f blinder
 
 blinder "$1"
+
 

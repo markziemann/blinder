@@ -148,7 +148,7 @@ cat $REPORT
 #ps2pdfwr $REPORT.ps $FILE.pdf
 
 # remove old working directories
-find ~ -name '*blind*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
+find /var/www/html -name '*blinder_*' -maxdepth 1 -mmin +10 -exec rm -rfv {} >/dev/null  2>&1 \;
 
 
 cat <<EOT
@@ -168,9 +168,4 @@ EOT
 export -f blinder
 
 blinder "$1"
-
-
-
-
-
 

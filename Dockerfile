@@ -33,6 +33,8 @@ RUN echo
 
 RUN echo
 
+RUN echo
+
 RUN git clone https://github.com/markziemann/blinder.git
 
 RUN cp blinder/blinder.html blinder/unblinder.html /var/www/html/ && \

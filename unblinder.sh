@@ -40,7 +40,15 @@ sed 1d marking_table.tsv | while read line ; do
     NAME=$(grep -w $CHECKSUM checksums.tsv | cut -f1)
     mv $FILE unblinded/$NAME
 done
-mv marking_table.tsv checksums.tsv unblinded
+
+join -1 2 -2 1 \
+ <(sort -k 2,2 checksums.tsv) \
+ <(sort -k 1b,1 marking_table.tsv) \
+| tr ' ' '\t' \
+| awk '{OFS="\t"}{print $2,$1,$3,$5,$6}' \
+| sort -k2g > results.tsv
+
+mv marking_table.tsv checksums.tsv results.tsv unblinded
 
 zip -r unblinded.zip unblinded >/dev/null 2>&1
 
